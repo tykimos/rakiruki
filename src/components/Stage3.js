@@ -9,7 +9,6 @@ const GAME_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 600;
 const ROCKET_WIDTH = 70;
 const ROCKET_HEIGHT = 100;
 const LAKILUKI_WIDTH = 35;
-const LAKILUKI_HEIGHT = 35;
 
 // 행성, 고향 행성
 const PLANET_BASE_SIZE = 60;
@@ -22,8 +21,6 @@ const BULLET_SPEED = 8;
 
 // 게임 진행
 const TOTAL_DISTANCE = 5000;   
-const BASE_SPEED = 2;         
-const DISTANCE_FOR_MAX_SPEED = 6000;  
 const MAX_SPEED_FACTOR = 2.5;  
 const COMBO_RESET_TIME = 2000; 
 
@@ -302,19 +299,23 @@ const Stage3 = ({
   //
   useEffect(() => {
     const handleKeyboard = (e) => {
-      if (!gameStateRef.current.isStarted || gameStateRef.current.isGameOver) return;
-      
       if (e.code === 'Space') {
-        shootBullet();
+        if (!gameStateRef.current.isStarted || gameStateRef.current.isGameOver) {
+          startOrRestartGame();
+        } else {
+          shootBullet();
+        }
       }
-      if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
-        moveRocket(e.code === 'ArrowLeft' ? -20 : 20);
-      }
+      if (gameStateRef.current.isStarted && !gameStateRef.current.isGameOver) {
+        if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+          moveRocket(e.code === 'ArrowLeft' ? -20 : 20);
+        }
+      } 
     };
 
     window.addEventListener('keydown', handleKeyboard);
     return () => window.removeEventListener('keydown', handleKeyboard);
-  }, [moveRocket, shootBullet]);
+  }, [moveRocket, shootBullet, startOrRestartGame]);
 
   //
   // ===========[ 폭발 생성 ]===========
