@@ -83,9 +83,6 @@ const Stage2 = ({
   const canvasRef = useRef(null);
   const imagesRef = useRef({});
 
-  // animationFrame ID
-  const animationRef = useRef(null);
-
   // FPS 계산용
   const lastFrameTimeRef = useRef(performance.now());
   const fpsRef = useRef(0);
@@ -153,6 +150,7 @@ const Stage2 = ({
 
   // 키보드/터치 이벤트
   useEffect(() => {
+    const canvas = canvasRef.current;  // 현재 canvas를 변수에 저장
     const handleKeyDown = (e) => {
       if (e.code === 'Space') {
         if (!gameStateRef.current.isStarted || gameStateRef.current.isGameOver) {
@@ -172,11 +170,11 @@ const Stage2 = ({
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    canvasRef.current?.addEventListener('touchstart', handleTouch);
+    canvas?.addEventListener('touchstart', handleTouch);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      canvasRef.current?.removeEventListener('touchstart', handleTouch);
+      canvas?.removeEventListener('touchstart', handleTouch);  // 저장된 canvas 변수 사용
     };
   }, [jump, startOrRestartGame]);
 

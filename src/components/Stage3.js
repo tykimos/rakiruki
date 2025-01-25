@@ -273,30 +273,20 @@ const Stage3 = ({
   // ===========[ 키 이벤트 (스크롤 방지) ]===========
   //
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      // 스크롤 방지
-      if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space','PageUp','PageDown'].includes(e.code)){
-        e.preventDefault();
+    const handleKeyboard = (e) => {
+      if (!gameStateRef.current.isStarted || gameStateRef.current.isGameOver) return;
+      
+      if (e.code === 'Space') {
+        shootBullet();
       }
-
-      switch(e.code){
-        case 'ArrowLeft': moveRocket(-20); break;
-        case 'ArrowRight': moveRocket(20); break;
-        case 'Space': 
-          if(!gameStateRef.current.isStarted || gameStateRef.current.isGameOver){
-            startOrRestartGame();
-          }
-          else{
-            shootBullet();
-          }
-          break;
-        default: break;
+      if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+        moveRocket(e.code === 'ArrowLeft' ? -1 : 1);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown, { passive:false }); 
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [startOrRestartGame]);
+    window.addEventListener('keydown', handleKeyboard);
+    return () => window.removeEventListener('keydown', handleKeyboard);
+  }, [moveRocket, shootBullet]);
 
   //
   // ===========[ 로켓 이동 ]===========
