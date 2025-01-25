@@ -270,25 +270,6 @@ const Stage3 = ({
   }, [initStars]);
 
   //
-  // ===========[ 키 이벤트 (스크롤 방지) ]===========
-  //
-  useEffect(() => {
-    const handleKeyboard = (e) => {
-      if (!gameStateRef.current.isStarted || gameStateRef.current.isGameOver) return;
-      
-      if (e.code === 'Space') {
-        shootBullet();
-      }
-      if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
-        moveRocket(e.code === 'ArrowLeft' ? -1 : 1);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyboard);
-    return () => window.removeEventListener('keydown', handleKeyboard);
-  }, [moveRocket, shootBullet]);
-
-  //
   // ===========[ 로켓 이동 ]===========
   //
   const moveRocket = useCallback((dx) => {
@@ -315,6 +296,25 @@ const Stage3 = ({
       };
     });
   },[]);
+
+  //
+  // ===========[ 키보드 이벤트 ]===========
+  //
+  useEffect(() => {
+    const handleKeyboard = (e) => {
+      if (!gameStateRef.current.isStarted || gameStateRef.current.isGameOver) return;
+      
+      if (e.code === 'Space') {
+        shootBullet();
+      }
+      if (e.code === 'ArrowLeft' || e.code === 'ArrowRight') {
+        moveRocket(e.code === 'ArrowLeft' ? -20 : 20);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyboard);
+    return () => window.removeEventListener('keydown', handleKeyboard);
+  }, [moveRocket, shootBullet]);
 
   //
   // ===========[ 폭발 생성 ]===========
